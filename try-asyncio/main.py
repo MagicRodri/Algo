@@ -6,9 +6,11 @@ async def say_after(delay, what):
     print(what)
 
 async def main():
+	task1 = asyncio.create_task(say_after(1,'Hello'))
+	task2 = asyncio.create_task(say_after(2,'world'))
 	print('Started at %s' %time.strftime('%X'))
-	await say_after(1,'Hello')
-	await say_after(2,'world')
+	await task1
+	await task2
 	print('Finished at %s' %time.strftime('%X'))
 
 asyncio.run(main())
