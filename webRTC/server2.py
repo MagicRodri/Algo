@@ -11,12 +11,14 @@ from aiohttp import web
 from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder, MediaRelay
 from av import VideoFrame
+from matplotlib import pyplot as plt
 
 ROOT = os.path.dirname(__file__)
 
 logger = logging.getLogger("pc")
 pcs = set()
 relay = MediaRelay()
+
 
 class VideoTransformTrack(MediaStreamTrack):
     """
@@ -32,8 +34,10 @@ class VideoTransformTrack(MediaStreamTrack):
     async def recv(self):
         video_frame = await self.track.recv()
         frame = video_frame.to_ndarray(format="bgr24")
-        cv2.imshow("frame", frame)
-        return video_frame
+
+        plt.imshow(frame)
+        plt.show()
+        return frame
 
 
 async def index(request):
@@ -78,11 +82,9 @@ async def offer(request):
         log_info("Track %s received", track.kind)
 
         if track.kind == "video":
-            print(type(track))
-            # VideoTransformTrack(
-            #     relay.subscribe(track)
-            # )
-
+            
+            vi = VideoTransformTrack(relay.subscribe(track))
+            
         @track.on("ended")
         async def on_ended():
             log_info("Track %s ended", track.kind)

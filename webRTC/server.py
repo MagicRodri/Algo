@@ -11,6 +11,8 @@ from aiohttp import web
 from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder, MediaRelay
 from av import VideoFrame
+from matplotlib import pyplot as plt
+from retinaface import RetinaFace
 
 ROOT = os.path.dirname(__file__)
 
@@ -18,6 +20,28 @@ logger = logging.getLogger("pc")
 pcs = set()
 relay = MediaRelay()
 
+def detect_face(image ,x_eps=0.35, y_eps=0.35):
+    """
+
+    """
+
+    resp = RetinaFace.detect_faces(image)
+    try:
+
+        facial_area = resp.get('face_1').get('facial_area')
+        x1,y1,x2,y2 = facial_area
+        w = abs(x2 - x1)
+        h = abs(y2 - y1)
+
+        return (x1,y1,w,h)
+    except:
+        return (0,0,0,0)
+
+def draw_dectected_face(image):
+    """
+    """
+    x,y,w,h = detect_face(image)
+    cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
 class VideoTransformTrack(MediaStreamTrack):
     """
@@ -44,7 +68,7 @@ class VideoTransformTrack(MediaStreamTrack):
             img_color = cv2.pyrUp(cv2.pyrUp(img_color))
 
             # prepare edges
-            img_edges = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+            img_edges = cv2.cv2tColor(img, cv2.COLOR_RGB2GRAY)
             img_edges = cv2.adaptiveThreshold(
                 cv2.medianBlur(img_edges, 7),
                 255,
@@ -53,7 +77,7 @@ class VideoTransformTrack(MediaStreamTrack):
                 9,
                 2,
             )
-            img_edges = cv2.cvtColor(img_edges, cv2.COLOR_GRAY2RGB)
+            img_edges = cv2.cv2tColor(img_edges, cv2.COLOR_GRAY2RGB)
 
             # combine color and edges
             img = cv2.bitwise_and(img_color, img_edges)
@@ -63,29 +87,27 @@ class VideoTransformTrack(MediaStreamTrack):
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
+
         elif self.transform == "edges":
             # perform edge detection
             img = frame.to_ndarray(format="bgr24")
-            img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
+            img = cv2.cv2tColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
 
             # rebuild a VideoFrame, preserving timing information
             new_frame = VideoFrame.from_ndarray(img, format="bgr24")
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
-        elif self.transform == "rotate":
-            # rotate image
-            img = frame.to_ndarray(format="bgr24")
-            rows, cols, _ = img.shape
-            M = cv2.getRotationMatrix2D((cols / 2, rows / 2), frame.time * 45, 1)
-            img = cv2.warpAffine(img, M, (cols, rows))
 
-            # rebuild a VideoFrame, preserving timing information
+        elif self.transform == "rotate":
+            img = frame.to_ndarray(format="bgr24")
+            draw_dectected_face(img)
             new_frame = VideoFrame.from_ndarray(img, format="bgr24")
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
         else:
+
             return frame
 
 
