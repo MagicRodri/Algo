@@ -5,6 +5,7 @@ import logging
 import os
 import ssl
 import uuid
+from pathlib import Path
 
 import cv2
 from aiohttp import web
@@ -12,7 +13,6 @@ from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder, MediaRelay
 from av import VideoFrame
 from matplotlib import pyplot as plt
-from retinaface import RetinaFace
 
 ROOT = os.path.dirname(__file__)
 
@@ -20,21 +20,37 @@ logger = logging.getLogger("pc")
 pcs = set()
 relay = MediaRelay()
 
-def detect_face(image ,x_eps=0.35, y_eps=0.35):
+def detect_face(image):
     """
+        Detect and return (x,y,w,h) of the wider face on an image
+        x,y - top left position of detected face rectangle
+        w,h - width and height
+        Raise an IndexError when no face detected
 
+        Before use, make sure to provide openCv trained models directory (defaut is ./data/)
     """
+    gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    data_dir = Path(cv2.__file__).parent / 'data'
+    face_cascade_model_file = os.path.join(data_dir,'haarcascade_frontalface_alt.xml')
+    face_cascade = cv2.CascadeClassifier(face_cascade_model_file)
+    faces = face_cascade.detectMultiScale(
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(30, 30),
+        flags = cv2.CASCADE_SCALE_IMAGE
+    )
+    if len(faces) != 0:
+        if len(faces) > 1:
+            faces = sorted(faces, key = lambda face : face[2] * face[3], reverse=True)
+        
+        # image_width = image.shape[1]
+        # image_height = image.shape[0]
+        
+        x,y,w,h = faces[0]
+        return (x,y,w,h)
 
-    resp = RetinaFace.detect_faces(image)
-    try:
-
-        facial_area = resp.get('face_1').get('facial_area')
-        x1,y1,x2,y2 = facial_area
-        w = abs(x2 - x1)
-        h = abs(y2 - y1)
-
-        return (x1,y1,w,h)
-    except:
+    else:
         return (0,0,0,0)
 
 def draw_dectected_face(image):
