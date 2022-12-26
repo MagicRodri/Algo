@@ -4,15 +4,20 @@ import tweepy
 from dotenv import load_dotenv
 
 load_dotenv()
-# Authenticate to Twitter
-API_KEY = os.getenv("consumer_key")
-API_SECRET = os.getenv("consumer_secret")
-auth = tweepy.OAuth1UserHandler(API_KEY,API_SECRET)
-auth.set_access_token(os.getenv("access_token"),os.getenv("access_token_secret"))
+
+
+client = tweepy.Client(
+    consumer_key=os.getenv("consumer_key"),
+    consumer_secret=os.getenv("consumer_secret"),
+    access_token=os.getenv("access_token"),
+    access_token_secret=os.getenv("access_token_secret"),
+)
+
+print(client.get_home_timeline())
 
 # Create API object with proxy
-api = tweepy.API(auth, proxy="")
-api.verify_credentials()
+# api = tweepy.API(auth)
+# api.verify_credentials()
 # try:
 #     api.verify_credentials()
 #     print("Authentication OK")
