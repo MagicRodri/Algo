@@ -11,7 +11,7 @@ auth = tweepy.OAuth1UserHandler(API_KEY,API_SECRET)
 auth.set_access_token(os.getenv("access_token"),os.getenv("access_token_secret"))
 
 # Create API object with proxy
-api = tweepy.API(auth, proxy="http://190.109.18.65:8080")
+api = tweepy.API(auth, proxy="")
 api.verify_credentials()
 # try:
 #     api.verify_credentials()
