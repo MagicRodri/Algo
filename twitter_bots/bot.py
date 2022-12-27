@@ -135,6 +135,9 @@ class MarketCapBot:
             else:
                 self.twitter_client.create_tweet(text=message,in_reply_to_tweet_id=pair)
             logging.info("Message posted!")
+        except tweepy.errors.Forbidden as e:
+            logging.error("Error posting message",e)
+            return
         except Exception as e:
             logging.debug("Error posting message",e)
             raise e
