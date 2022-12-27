@@ -2,7 +2,7 @@ name: Template CryptoCapBot Python application
 
 on:
   push:
-    branches: ["my-branch-name"] # TODO: rename
+    branches: ["main"] # TODO: rename
 
 jobs:
   build:
@@ -23,10 +23,15 @@ jobs:
 
       - name: Execute python script
         env: # Or as an environment variable
+          DEBUG: 0
+          LIVE: 0
           TW_ACCESS_TOKEN: ${{ secrets.TW_ACCESS_TOKEN }}
           TW_ACCESS_TOKEN_SECRET: ${{ secrets.TW_ACCESS_TOKEN_SECRET }}
           TW_CONSUMER_KEY: ${{ secrets.TW_CONSUMER_KEY }}
           TW_CONSUMER_KEY_SECRET: ${{ secrets.TW_CONSUMER_KEY_SECRET }}
+          MG_USER: ${{ secrets.MG_USER }}
+          MG_PASSWORD: ${{ secrets.MG_PASSWORD }}
+          MG_CLUSTER: ${{ secrets.MG_CLUSTER }}
           # TODO: add more
         run: |
-          python main.py
+          python twitter_bots/bot.py
