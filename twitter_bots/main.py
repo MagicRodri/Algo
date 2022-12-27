@@ -14,5 +14,6 @@ def main():
     print(message)
     bot.post_message(pair=pair_to_post,message=message)
 
+
 if __name__ == "__main__":
     main()
