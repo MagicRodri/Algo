@@ -12,4 +12,5 @@ try:
 except Exception as e:
     print(e)
 
-print(client.get_home_timeline())
+if __name__ == "__main__":
+    print(client.get_home_timeline())
