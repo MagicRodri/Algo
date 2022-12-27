@@ -136,8 +136,9 @@ class MarketCapBot:
                 self.twitter_client.create_tweet(text=message,in_reply_to_tweet_id=pair)
             logging.info("Message posted!")
         except tweepy.Forbidden as e:
-            logging.error("Error posting message",e)
-            return
+            logging.warning("Can't post a message of the same content",e)
+            return None
+            
         except Exception as e:
             logging.error("Error posting message",e)
             raise e
