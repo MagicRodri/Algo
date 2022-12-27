@@ -20,7 +20,7 @@ logger = logging.getLogger("pc")
 pcs = set()
 relay = MediaRelay()
 
-def detect_face(image):
+def detect_face(image, x_eps=0.1, y_eps=0.15):
     """
         Detect and return (x,y,w,h) of the wider face on an image
         x,y - top left position of detected face rectangle
@@ -48,6 +48,10 @@ def detect_face(image):
         # image_height = image.shape[0]
         
         x,y,w,h = faces[0]
+        x -= int(x_eps*w)
+        y -= int(y_eps*h)
+        w = int(w*(1+2*x_eps))
+        h = int(h*(1+2*y_eps))
         return (x,y,w,h)
 
     else:
