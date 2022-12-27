@@ -1,8 +1,11 @@
+import logging
+
 import tweepy
 
 import config
 
 try:
+    logging.info("Connecting to Twitter...")
     client = tweepy.Client(
         consumer_key=config.TW_CONSUMER_KEY,
         consumer_secret=config.TW_CONSUMER_KEY_SECRET,
@@ -10,7 +13,7 @@ try:
         access_token_secret=config.TW_ACCESS_TOKEN_SECRET,
     )
 except Exception as e:
-    print(e)
+    logging.debug("Error connecting to Twitter:", e)
 
 if __name__ == "__main__":
-    print(client.get_home_timeline())
+    print(client.get_recent_tweets_count("BTC-USD"))
