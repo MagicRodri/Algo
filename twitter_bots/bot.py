@@ -28,7 +28,7 @@ class MarketCapBot:
         self.posts_db = posts_db
         self.twitter_client = twitter_client
     
-    def _get_pair_to_post(self)-> str:
+    def get_pair_to_post(self)-> str:
         """
             Method to return the pair to post
         """
@@ -45,7 +45,7 @@ class MarketCapBot:
         if pair is None and (pair_symbol is None or pair_base is None):
             raise ValueError("Either pair or pair_symbol and pair_base must be provided")
         elif pair is None:
-            pair = self._get_pair_to_post()
+            pair = self.get_pair_to_post()
         elif pair is not None:
             try:
                 pair_symbol = pair.split('-')[0].lower()
@@ -87,7 +87,7 @@ class MarketCapBot:
         """
 
         if pair is None:
-            pair = self._get_pair_to_post()
+            pair = self.get_pair_to_post()
         if message_dict is None:
             try:
                 message_dict = self._get_message_dict(pair=pair)
@@ -123,7 +123,7 @@ class MarketCapBot:
             Method to post a message to twitter
         """
         if pair is None:
-            pair = self._get_pair_to_post()
+            pair = self.get_pair_to_post()
         if message is None:
             message = self.compose_message(pair=pair)
 

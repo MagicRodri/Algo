@@ -5,8 +5,6 @@ import pymongo
 
 import config
 
-logging.basicConfig(level=logging.INFO)
-
 # Connect to MongoDB
 mongo_user = config.MG_USER
 mongo_pass = config.MG_PASSWORD
