@@ -29,6 +29,10 @@ jobs:
           TW_ACCESS_TOKEN_SECRET: ${{ secrets.TW_ACCESS_TOKEN_SECRET }}
           TW_CONSUMER_KEY: ${{ secrets.TW_CONSUMER_KEY }}
           TW_CONSUMER_KEY_SECRET: ${{ secrets.TW_CONSUMER_KEY_SECRET }}
+          M_TW_ACCESS_TOKEN: ${{ secrets.M_TW_ACCESS_TOKEN }}
+          M_TW_ACCESS_TOKEN_SECRET: ${{ secrets.M_TW_ACCESS_TOKEN_SECRET }}
+          M_TW_CONSUMER_KEY: ${{ secrets.M_TW_CONSUMER_KEY }}
+          M_TW_CONSUMER_KEY_SECRET: ${{ secrets.M_TW_CONSUMER_KEY_SECRET }}
           MG_USER: ${{ secrets.MG_USER }}
           MG_PASSWORD: ${{ secrets.MG_PASSWORD }}
           MG_CLUSTER: ${{ secrets.MG_CLUSTER }}
