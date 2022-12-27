@@ -92,7 +92,7 @@ class MarketCapBot:
             try:
                 message_dict = self._get_message_dict(pair=pair)
             except Exception as e:
-                logging.debug('Error getting message_dict',e)
+                logging.error('Error getting message_dict',e)
         
         logging.info("Composing message...")  
         message = f"Top Market Venues for {pair}:\n"
@@ -115,7 +115,7 @@ class MarketCapBot:
             })
             logging.info("Message saved to database!")
         except Exception as e:
-            logging.debug("Error saving message to database",e)
+            logging.error("Error saving message to database",e)
             raise e
 
     def post_message(self,pair:str=None,message:str=None) -> None:
@@ -139,7 +139,7 @@ class MarketCapBot:
             logging.error("Error posting message",e)
             return
         except Exception as e:
-            logging.debug("Error posting message",e)
+            logging.error("Error posting message",e)
             raise e
 
         self._save_message_to_db(pair=pair,message=message)

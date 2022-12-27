@@ -23,7 +23,7 @@ try:
     ohlcv_db = metrics.ohlcv_db
     posts_db = metrics.posts_db
 except Exception as e:
-    logging.debug("Error connecting to MongoDB:", e)
+    logging.error("Error connecting to MongoDB:", e)
 
 
 def get_top_pairs(max_num:int=100) -> List:
@@ -34,7 +34,7 @@ def get_top_pairs(max_num:int=100) -> List:
         logging.info("Getting top pairs by volume...")
         ohlcv_documents = ohlcv_db.find({},{'_id':False}).sort('volume', pymongo.DESCENDING)
     except Exception as e:
-        logging.debug("Error getting top pairs:", e)
+        logging.error("Error getting top pairs:", e)
         return list()
 
     top_100_pairs_by_volume_set = set()
@@ -59,7 +59,7 @@ def get_oldest_posted_pairs(top_pairs:List,max_num:int=5) -> Set:
         logging.info("Getting oldest posted pairs...")
         posted_pairs_among_top = posts_db.find({'pair' : {'$in':top_pairs}}).sort('time', pymongo.ASCENDING).distinct('pair')
     except Exception as e:
-        logging.debug("Error getting oldest posted pairs:", e)
+        logging.error("Error getting oldest posted pairs:", e)
         return set()
 
     posted_pairs_set_among_top = set()
@@ -80,7 +80,7 @@ def get_latest_posted_pair() -> str:
         logging.info("Getting latest posted pair...")
         document = posts_db.find({}).sort('time', pymongo.DESCENDING).limit(1)
     except Exception as e:
-        logging.debug("Error getting latest posted pair:", e)
+        logging.error("Error getting latest posted pair:", e)
         return str()
     return document[0].get('pair')
 
@@ -103,7 +103,7 @@ def get_pair_to_post(top_pairs:List,oldest_posted_pairs:Iterable = None) -> str:
             # Or the first pair by volume
             return top_pairs[0]
     except Exception as e:
-        logging.debug("Error getting pair to post:", e)
+        logging.error("Error getting pair to post:", e)
         return str()
 if __name__ == "__main__":
 
