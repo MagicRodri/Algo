@@ -1,9 +1,8 @@
 import logging
 from typing import Iterable, List, Set
 
-import pymongo
-
 import config
+import pymongo
 
 if config.DEBUG:
     logging.basicConfig(level=logging.DEBUG)
