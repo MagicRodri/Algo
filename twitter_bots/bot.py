@@ -1,6 +1,8 @@
+import datetime
 import logging
 
 import pymongo
+import tweepy
 
 import db
 import twitter
@@ -15,7 +17,7 @@ class MarketCapBot:
         self,
         ohlcv_db:pymongo.collection.Collection,
         posts_db:pymongo.collection.Collection,
-        twitter_client
+        twitter_client:tweepy.client.Client
         ):
 
         """
@@ -64,7 +66,6 @@ class MarketCapBot:
             if latest_date is None:
                 latest_date = item['timestamp']
             if item['timestamp'] == latest_date:
-                # pprint.pprint(item)
                 if item['marketVenue'] not in message_dict:
                     if len(message_dict) <= 5:
                         # key for top 5 marketVenues
@@ -82,7 +83,7 @@ class MarketCapBot:
 
     def compose_message(self,pair:str=None,message_dict:dict=None) -> str:
         """
-            Function to compose a message for a given pair and message_dict
+            method to compose a message for a given pair and message_dict
         """
 
         if pair is None:
@@ -94,12 +95,62 @@ class MarketCapBot:
                 logging.debug('Error getting message_dict',e)
         
         logging.info("Composing message...")  
-        message = f"Top 5 marketVenues for {pair}:\n"
+        message = f"Top Market Venues for {pair}:\n"
         for marketVenue,percentage in sorted(message_dict.items()):
             message += f"{marketVenue.capitalize()}: {percentage}%\n"
         return message
 
+    def _save_message_to_db(self,pair:str,message:str=None) -> None:
+        """
+            Method to save message to the database
+        """
+        if message is None:
+            message = self.compose_message(pair=pair)
+        try:
+            logging.info("Saving message to database...")
+            self.posts_db.insert_one({
+                'pair':pair,
+                'tweet_text':message,
+                'time':datetime.datetime.utcnow()
+            })
+            logging.info("Message saved to database!")
+        except Exception as e:
+            logging.debug("Error saving message to database",e)
+            raise e
+
+    def post_message(self,pair:str=None,message:str=None) -> None:
+        """
+            Method to post a message to twitter
+        """
+        if pair is None:
+            pair = self._get_pair_to_post()
+        if message is None:
+            message = self.compose_message(pair=pair)
+
+        pair_post_count = self.posts_db.count_documents({'pair':pair})
+        try:
+            logging.info("Posting message...")
+            if pair_post_count == 0:
+                self.twitter_client.create_tweet(text=message)
+            else:
+                self.twitter_client.create_tweet(text=message,in_reply_to_tweet_id=pair)
+            logging.info("Message posted!")
+        except Exception as e:
+            logging.debug("Error posting message",e)
+            raise e
+
+        self._save_message_to_db(pair=pair,message=message)
+
+    def ping(self) -> None:
+        """
+            Method to ping the bot
+        """
+        logging.info("Pinging bot...")
+        self.twitter_client.create_tweet(text="Pong!")
+        logging.info("Bot pinged!")
+        
 
 if __name__ == "__main__":
     bot = MarketCapBot(db.ohlcv_db,db.posts_db,twitter.client)
+    bot.ping()
     print(bot.compose_message())
