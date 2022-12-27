@@ -1,3 +1,5 @@
+import logging
+
 import pymongo
 
 import db
@@ -19,6 +21,7 @@ class MarketCapBot:
         """
             Constructor for MarketCapBot
         """
+        logging.info("Initializing MarketCapBot...")
         self.ohlcv_db = ohlcv_db
         self.posts_db = posts_db
         self.twitter_client = twitter_client
@@ -81,15 +84,21 @@ class MarketCapBot:
         """
             Function to compose a message for a given pair and message_dict
         """
+
         if pair is None:
             pair = self._get_pair_to_post()
         if message_dict is None:
-            message_dict = self._get_message_dict(pair=pair)
-            
+            try:
+                message_dict = self._get_message_dict(pair=pair)
+            except Exception as e:
+                logging.debug('Error getting message_dict',e)
+        
+        logging.info("Composing message...")  
         message = f"Top 5 marketVenues for {pair}:\n"
         for marketVenue,percentage in sorted(message_dict.items()):
             message += f"{marketVenue.capitalize()}: {percentage}%\n"
         return message
+
 
 if __name__ == "__main__":
     bot = MarketCapBot(db.ohlcv_db,db.posts_db,twitter.client)
