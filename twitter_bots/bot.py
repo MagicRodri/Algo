@@ -151,6 +151,7 @@ class MarketCapBot:
         
 
 if __name__ == "__main__":
+    
     bot = MarketCapBot(db.ohlcv_db,db.posts_db,twitter.client)
     bot.ping()
     print(bot.compose_message())

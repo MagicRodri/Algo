@@ -1,14 +1,9 @@
 import logging
 
-import config
 import db
 import twitter
 from bot import MarketCapBot
 
-if config.DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
 
 def main():
 
