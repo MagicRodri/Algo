@@ -100,7 +100,7 @@ class MarketCapBot:
             message += f"{marketVenue.capitalize()}: {percentage}%\n"
         return message
 
-    def _save_message_to_db(self,pair:str,message:str=None) -> None:
+    def _save_message_to_db(self,pair:str,tweet_id:str=None,message:str=None) -> None:
         """
             Method to save message to the database
         """
@@ -108,15 +108,19 @@ class MarketCapBot:
             message = self.compose_message(pair=pair)
         try:
             logging.info("Saving message to database...")
-            self.posts_db.insert_one({
+            current_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+            post_document = {
                 'pair':pair,
                 'tweet_text':message,
-                'time':datetime.datetime.utcnow()
-            })
+                'time':datetime.datetime.fromisoformat(current_time)
+            }
+            if tweet_id is not None:
+                post_document['tweet_id'] = tweet_id
+            self.posts_db.insert_one(post_document)
             logging.info("Message saved to database!")
         except Exception as e:
-            logging.error("Error saving message to database",e)
-            raise e
+            logging.error("Error saving message to database %s"%e)
+            return
 
     def post_message(self,pair:str=None,message:str=None) -> None:
         """
@@ -127,23 +131,34 @@ class MarketCapBot:
         if message is None:
             message = self.compose_message(pair=pair)
 
-        pair_post_count = self.posts_db.count_documents({'pair':pair})
+        pair_main_post = self.posts_db.find_one({'pair':pair,'tweet_id':{'$exists':True}})
+        tweet_id = None
         try:
             logging.info("Posting message...")
-            if pair_post_count == 0:
-                self.twitter_client.create_tweet(text=message)
+            if pair_main_post is None:
+                response = self.twitter_client.create_tweet(text=message)
+                tweet_id = response.data.get('id')
             else:
-                self.twitter_client.create_tweet(text=message,in_reply_to_tweet_id=pair)
-            logging.info("Message posted!")
-        except tweepy.Forbidden:
-            logging.warning("Seems you've already posted this message")
-            return None
+                self.twitter_client.create_tweet(
+                    text=message,
+                    in_reply_to_status_id=pair_main_post['tweet_id']
+                    )
+        except tweepy.TweepyException as e:
+            logging.error("%s"%e)
 
         except Exception as e:
-            logging.error("Error posting message",e)
-            raise e
+            logging.error("Error posting message %s"%e)
 
-        self._save_message_to_db(pair=pair,message=message)
+        else:
+            logging.info("Message posted!")
+            if tweet_id:
+                self._save_message_to_db(pair=pair,tweet_id=tweet_id,message=message)
+            else:
+                self._save_message_to_db(pair=pair,message=message)
+            return
+
+        logging.info("Message not posted!")
+  
 
     def ping(self) -> None:
         """
