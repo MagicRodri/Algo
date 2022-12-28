@@ -50,13 +50,13 @@ def get_top_pairs(max_num:int=100) -> List:
     return top_100_pairs_by_volume
 
 
-def get_oldest_posted_pairs(top_pairs:List,max_num:int=5) -> Set:
+def get_latest_posted_pairs(top_pairs:List,max_num:int=5) -> Set:
     """
-        Function to return at most the top max_num distinct pairs by oldest post time from posts db
+        Function to return at most the top max_num distinct pairs by latest post time from posts db
     """
     try:
         logging.info("Getting oldest posted pairs...")
-        posted_pairs_among_top = posts_db.find({'pair' : {'$in':top_pairs}}).sort('time', pymongo.ASCENDING).distinct('pair')
+        posted_pairs_among_top = posts_db.find({'pair' : {'$in':top_pairs}}).sort('time', pymongo.DESCENDING).distinct('pair')
     except Exception as e:
         logging.error("Error getting oldest posted pairs:", e)
         return set()
