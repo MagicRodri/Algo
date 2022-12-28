@@ -153,8 +153,11 @@ class MarketCapBot:
             logging.info("Pinging bot...")
             self.twitter_client.create_tweet(text="Pong!")
             logging.info("Bot pinged!")
-        except:
-            logging.info("Something went wrong while pinging the bot")
+        except tweepy.Forbidden:
+            logging.warning("Seems you've already pinged the bot")
+            return None
+        except Exception as e:
+            logging.info("Something went wrong while pinging the bot:%s"%e)
             return None        
 
 if __name__ == "__main__":
