@@ -149,10 +149,13 @@ class MarketCapBot:
         """
             Method to ping the bot
         """
-        logging.info("Pinging bot...")
-        self.twitter_client.create_tweet(text="Pong!")
-        logging.info("Bot pinged!")
-        
+        try:
+            logging.info("Pinging bot...")
+            self.twitter_client.create_tweet(text="Pong!")
+            logging.info("Bot pinged!")
+        except Exception as e:
+            logging.error("Error pinging bot",e)
+            raise e        
 
 if __name__ == "__main__":
     
