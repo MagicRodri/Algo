@@ -5,6 +5,11 @@
     lignes
 """
 
+'''
+    Ceci c'est egalement un commentaire
+    sur plusieurs
+'''
+
 """
     Take input from a user
 """
