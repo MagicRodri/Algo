@@ -1,4 +1,5 @@
 """
+    1
     Write a simple program:
         - takes the user's last name and first name
         - Show a welcoming message to the user
@@ -7,6 +8,15 @@
         - Ask user's height
         - Print height
         - Show a message with all the user's infos
+    
+    2
+    Write a program that is:
+        - able to choose a random number in a given range
+        - ask the user to guess the choosen number
+        - If the user's guess matches then stops
+        - Else tells if the guess was greater or less than the random number
+    Bonus:
+        - Uses a counter, is user expires counter then stops and the user fails
 """
 # Padel
 # print("welcome in my first programme")
@@ -23,7 +33,7 @@
 
 # #all user's informations
 # print("your full name is"+full_name)
-# print("you are",age,"years old.") 
+# print("you are",age,"years old.")
 # print("your height is")
 # print(height)
 # print("thank you !!")
@@ -38,7 +48,7 @@
 
 # Ared
 # print("Hey write down your last name and first name please")
-# last_name= input() 
+# last_name= input()
 # first_name= input()
 # name =last_name +" "+ first_name
 # print("You're welcome %s"%name)
@@ -49,6 +59,6 @@
 # print("what's your height then (in cm)")
 # height= int(input())
 # print("height = %s "%height)
-# print(" Ok %s,"%name) 
-# print("your age is %s"%age) 
+# print(" Ok %s,"%name)
+# print("your age is %s"%age)
 # print("and your height is %s"%height)
