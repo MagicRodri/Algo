@@ -1,3 +1,5 @@
+# source: https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue
+
 import asyncio
 import random
 import time

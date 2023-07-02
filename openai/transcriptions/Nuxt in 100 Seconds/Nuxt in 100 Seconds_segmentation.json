@@ -1,0 +1,33 @@
+{
+    "id": "b158c97a-858a-2469-ce2b-cc0d1cec58b7",
+    "segments": [
+        {
+            "segmentText": "Next, a battery's included framework for building any type of web application you can imagine with VJS.\n\nThe purpose of VJS is to build front-end user interfaces with JavaScript, but a true full-stack web application also needs to deal with routing, data fetching, caching, deployment, and more.\n\nThat's where Nux comes in.\n\nIt works by strapping its Nitro Server Engine 2 view, enabling multiple rendering modes from a single application.\n\nBy default, it does Universal Rendering, where the initial page view is rendered on the server, then JavaScript takes over to handle all subsequent navigation client side.\n\nHowever, if that's not ideal, developers can set different rendering and caching rules for every route, and it's capable of running on edge networks like CloudFly.\n\nIts built-in DevTools are incredible, and may trigger jealousy if you use a different framework.\n\nBeyond that, it has a huge ecosystem of modules that can handle requirements like image optimization, content management, database integrations, e-commerce, and countless others.",
+            "segmentType": "normal_text"
+        },
+        {
+            "segmentText": "To get started, generate a new project with the CLI, then you'll find the main entry point in the app.view file.\n\nAnd notice how it's configured with TypeScript out of the box to ensure your own safety.",
+            "segmentType": "normal_text_short"
+        },
+        {
+            "segmentText": "To build an application, you write view components in the pages directory.\n\nThe structure of the file system determines the routes and URLs in the browser.\n\nWhat's unique about Nux, though, is that reusable components and composables have their own dedicated directories.\n\nAny code defined here can be automatically imported in your pages, and that means you don't need a massive list of import statements in every single page.\n\nAnd under the hood, it will automatically handle code splitting, so only the JavaScript needed for the components in this file will be sent downstream to the browser.",
+            "segmentType": "normal_text"
+        },
+        {
+            "segmentText": "Next up, we have the layouts directory.\n\nHere we define view components that have a slot in the middle, allowing the outer UI, like a nav bar and footer, to be shared across multiple pages.\n\nNow, if you're building a blog, you'll really like the content directory, because here you can write content in Markdown and use it throughout the application with minimal friction.\n\nThen we have the middleware directory, which is capable of running code before you navigate to a route, like for collecting analytics or checking the user authentication state.\n\nIt has many other special directories to offer, but everything in the framework is progressively enhanced, which means you can opt into these features as needed.",
+            "segmentType": "normal_text"
+        },
+        {
+            "segmentText": "Now, when it comes to data fetching, it has built-in composables like use fetch.\n\nIt's built on top of the fetch API in the browser, but can also cache and dedupe requests to make your application more efficient with zero effort.\n\nOn top of that, it also provides a use state composable that can deal with the complex issue of state management between client and server renders.",
+            "segmentType": "normal_text"
+        },
+        {
+            "segmentText": "When it comes to search engine optimization, it also provides composables like use head and use SEO meta to easily add metadata for search bots.\n\nMeanwhile, for humans, you can easily animate page transitions with the built-in transition component.\n\nAnd finally, when it comes time to deploy, you can either pre-render for a static host, build it for a Node.js server, or deploy it to a serverless edge function.",
+            "segmentType": "normal_text"
+        },
+        {
+            "segmentText": "This has been nukked in 100 seconds.\n\nIt's been a while since I've made one of these videos.\n\nIf you think I should continue making videos like this, hit the like button, and let me know in the comments.\n\nThanks for watching, and I will see you in the next one.",
+            "segmentType": "normal_text"
+        }
+    ]
+}
