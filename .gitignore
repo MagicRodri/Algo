@@ -1,4 +1,6 @@
+*.json
 imgs/
+images/
 videos/
 .vscode
 *.exe

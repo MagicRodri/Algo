@@ -63,51 +63,51 @@ def main():
 
     except HttpError as error:
         print('An error occurred: %s' % error)
-    now = datetime.datetime.utcnow()
-    event = {
-        'summary':
-        'Google I/O 2015',
-        'location':
-        '800 Howard St., San Francisco, CA 94103',
-        'description':
-        'A chance to hear more about Google\'s developer products.',
-        'start': {
-            'dateTime':
-            (now + datetime.timedelta(days=1, hours=1)).isoformat(),
-            'timeZone': 'America/Los_Angeles',
-        },
-        'end': {
-            'dateTime':
-            (now + datetime.timedelta(days=3, hours=1)).isoformat(),
-            'timeZone': 'America/Los_Angeles',
-        },
-        'attendees': [
-            {
-                'email': 'lpage@example.com'
-            },
-            {
-                'email': 'sbrin@example.com'
-            },
-        ],
-        'reminders': {
-            'useDefault':
-            False,
-            'overrides': [
-                {
-                    'method': 'email',
-                    'minutes': 24 * 60
-                },
-                {
-                    'method': 'popup',
-                    'minutes': 10
-                },
-            ],
-        },
-    }
+    # now = datetime.datetime.utcnow()
+    # event = {
+    #     'summary':
+    #     'Google I/O 2015',
+    #     'location':
+    #     '800 Howard St., San Francisco, CA 94103',
+    #     'description':
+    #     'A chance to hear more about Google\'s developer products.',
+    #     'start': {
+    #         'dateTime':
+    #         (now + datetime.timedelta(days=1, hours=1)).isoformat(),
+    #         'timeZone': 'America/Los_Angeles',
+    #     },
+    #     'end': {
+    #         'dateTime':
+    #         (now + datetime.timedelta(days=3, hours=1)).isoformat(),
+    #         'timeZone': 'America/Los_Angeles',
+    #     },
+    #     'attendees': [
+    #         {
+    #             'email': 'lpage@example.com'
+    #         },
+    #         {
+    #             'email': 'sbrin@example.com'
+    #         },
+    #     ],
+    #     'reminders': {
+    #         'useDefault':
+    #         False,
+    #         'overrides': [
+    #             {
+    #                 'method': 'email',
+    #                 'minutes': 24 * 60
+    #             },
+    #             {
+    #                 'method': 'popup',
+    #                 'minutes': 10
+    #             },
+    #         ],
+    #     },
+    # }
 
-    event = calendar_service.events().insert(calendarId='primary',
-                                             body=event).execute()
-    print('Event created: %s' % (event.get('htmlLink')))
+    # event = calendar_service.events().insert(calendarId='primary',
+    #                                          body=event).execute()
+    # print('Event created: %s' % (event.get('htmlLink')))
 
 
 if __name__ == '__main__':
